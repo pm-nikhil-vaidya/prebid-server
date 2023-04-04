@@ -757,11 +757,11 @@ func TestPurposeOneTreatmentAccessAllowed(t *testing.T) {
 func TestModulesGetConfig(t *testing.T) {
 	modules := AccountModules{
 		"acme": {
-			"foo":     json.RawMessage(`{"foo": "bar"}`),
-			"foo.bar": json.RawMessage(`{"foo": "bar"}`),
+			"foo":     map[string]interface{}{"foo": "bar"},
+			"foo.bar": map[string]interface{}{"foo": "bar"},
 		},
 		"acme.foo": {
-			"baz": json.RawMessage(`{"foo": "bar"}`),
+			"baz": map[string]interface{}{"foo": "bar"},
 		},
 	}
 
@@ -776,14 +776,14 @@ func TestModulesGetConfig(t *testing.T) {
 			description:    "Returns module config if found by ID",
 			givenId:        "acme.foo",
 			givenModules:   modules,
-			expectedConfig: json.RawMessage(`{"foo": "bar"}`),
+			expectedConfig: json.RawMessage(`{"foo":"bar"}`),
 			expectedError:  nil,
 		},
 		{
 			description:    "Returns module config if found by ID",
 			givenId:        "acme.foo.bar",
 			givenModules:   modules,
-			expectedConfig: json.RawMessage(`{"foo": "bar"}`),
+			expectedConfig: json.RawMessage(`{"foo":"bar"}`),
 			expectedError:  nil,
 		},
 		{

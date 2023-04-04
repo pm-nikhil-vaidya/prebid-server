@@ -258,8 +258,8 @@ type AccountHooks struct {
 }
 
 // AccountModules mapping provides account-level module configuration
-// format: map[vendor_name]map[module_name]json.RawMessage
-type AccountModules map[string]map[string]json.RawMessage
+// format: map[vendor_name]map[module_name]interface{}
+type AccountModules map[string]map[string]interface{}
 
 // ModuleConfig returns the account-level module config.
 // The id argument must be passed in the form "vendor.module_name",
@@ -270,9 +270,20 @@ func (m AccountModules) ModuleConfig(id string) (json.RawMessage, error) {
 		return nil, fmt.Errorf("ID must consist of vendor and module names separated by dot, got: %s", id)
 	}
 
+	var (
+		config json.RawMessage
+		err    error
+	)
+
 	vendor := ns[0]
 	module := ns[1]
-	return m[vendor][module], nil
+	if m[vendor][module] != nil {
+		if config, err = json.Marshal(m[vendor][module]); err != nil {
+			return nil, fmt.Errorf("invalid account module config provided, reason: %s", err.Error())
+		}
+	}
+
+	return config, nil
 }
 
 func (a *AccountChannel) IsSet() bool {
