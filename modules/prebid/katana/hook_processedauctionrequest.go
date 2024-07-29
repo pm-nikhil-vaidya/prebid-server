@@ -49,6 +49,7 @@ func (k Katana) handleProcessedAuctionHook(
 	// profile id from configs
 	rctx.ProfileID = k.cfg.ProfileId
 	rctx.TrackerEndpoint = k.cfg.TrackerUrl
+	rctx.Id = payload.Request.ID
 
 	rctx.Source, rctx.Origin = getSourceAndOrigin(payload.Request)
 	rctx.PageURL = getPageURL(payload.Request)
